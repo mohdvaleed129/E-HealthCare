@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head title="My appointments"}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{{> navbar}}
+<main id="main">
+  <div class="container section">
+    {{> alert}}
+    <div class="flex-between" style="margin-bottom:8px;">
+      <h1 class="mb-0">My appointments</h1>
+      <a class="btn btn-primary btn-sm" href="/doctors">Book new</a>
+    </div>
+
+    <div class="grid grid-3" style="margin:24px 0;">
+      <div class="stat-card stat-card--accent">
+        <div class="stat-card__label">Upcoming</div>
+        <div class="stat-card__value">{{upcoming.length}}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__label">Total booked</div>
+        <div class="stat-card__value">{{upcoming.length}}{{#if past.length}} + {{past.length}}{{/if}}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__label">Next token</div>
+        <div class="stat-card__value">{{#if upcoming.[0]}}#{{upcoming.[0].tokenNumber}}{{else}}—{{/if}}</div>
+      </div>
+    </div>
+
+    <h2 style="font-size:1.1rem;">Upcoming</h2>
+    {{#if upcoming.length}}
+      <div class="table-wrap" style="margin-bottom:32px;">
+        <table>
+          <thead>
+            <tr><th>Doctor</th><th>Date</th><th>Time</th><th>Token</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody>
+            {{#each upcoming}}
+              <tr>
+                <td>Dr. {{this.doctorId.name}} <span class="text-muted text-sm">({{this.doctorId.specialization}})</span></td>
+                <td>{{this.date}}</td>
+                <td>{{this.time}}</td>
+                <td>#{{this.tokenNumber}}</td>
+                <td><span class="badge {{badgeClass this.status}}">{{this.status}}</span></td>
+                <td>
+                  <form action="/appointments/{{this._id}}/cancel" method="POST" data-confirm="Cancel this appointment?">
+                    <button class="btn btn-danger btn-sm" type="submit">Cancel</button>
+                  </form>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    {{else}}
+      <div class="state-block state-block--inline" style="margin-bottom:32px;">
+        <h3>No upcoming appointments</h3>
+        <p><a href="/doctors">Find a doctor</a> to book your next visit.</p>
+      </div>
+    {{/if}}
+
+    <h2 style="font-size:1.1rem;">Past & cancelled</h2>
+    {{#if past.length}}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Doctor</th><th>Date</th><th>Time</th><th>Token</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            {{#each past}}
+              <tr>
+                <td>Dr. {{this.doctorId.name}}</td>
+                <td>{{this.date}}</td>
+                <td>{{this.time}}</td>
+                <td>#{{this.tokenNumber}}</td>
+                <td><span class="badge {{badgeClass this.status}}">{{this.status}}</span></td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    {{else}}
+      <div class="state-block state-block--inline">
+        <p class="mb-0">Nothing here yet.</p>
+      </div>
+    {{/if}}
+  </div>
+</main>
+{{> footer}}
+<script src="/js/app.js"></script>
+</body>
+</html>

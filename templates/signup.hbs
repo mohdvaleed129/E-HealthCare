@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head title="Sign up"}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{{> navbar}}
+<main id="main">
+  <div class="container section">
+    {{> alert}}
+    <div class="form-card">
+      <h1 style="font-size:1.5rem;">Create your patient account</h1>
+      <p class="text-sm text-muted">Book appointments and manage your visits in one place.</p>
+      <form action="/signup" method="POST" novalidate>
+        <div class="field">
+          <label for="name">Full name</label>
+          <input type="text" id="name" name="name" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" autocomplete="email" required />
+        </div>
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+91XXXXXXXXXX" />
+          <p class="hint">Used only to send appointment confirmations.</p>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="new-password" minlength="8" required />
+          <p class="hint">At least 8 characters.</p>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Create account</button>
+      </form>
+      <p class="text-sm mt-lg mb-0">Already have an account? <a href="/login">Log in</a></p>
+    </div>
+  </div>
+</main>
+{{> footer}}
+<script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head title="Doctor dashboard"}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{{> navbar}}
+<main id="main">
+  <div class="container section">
+    {{> alert}}
+    <h1>Welcome, Dr. {{doctor.name}}</h1>
+
+    <div class="dashboard">
+      <aside class="dashboard__sidebar">
+        <nav aria-label="Doctor dashboard sections">
+          <a href="#today" class="is-active">Today's queue</a>
+          <a href="#profile">Profile & availability</a>
+          <a href="#stats">Overview</a>
+        </nav>
+      </aside>
+
+      <div class="dashboard__main stack" style="gap:32px;">
+        <section id="stats">
+          <div class="grid grid-4">
+            <div class="stat-card stat-card--accent">
+              <div class="stat-card__label">Today</div>
+              <div class="stat-card__value">{{todaysAppointments.length}}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__label">Upcoming</div>
+              <div class="stat-card__value">{{upcomingCount}}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__label">Completed</div>
+              <div class="stat-card__value">{{completedCount}}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__label">Cancelled</div>
+              <div class="stat-card__value">{{cancelledCount}}</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="today" class="card">
+          <div class="flex-between" style="margin-bottom:16px;">
+            <h2 class="mb-0" style="font-size:1.1rem;">Today's queue</h2>
+            <span class="badge {{badgeClass doctor.availabilityStatus}}">{{doctor.availabilityStatus}}</span>
+          </div>
+
+          <form action="/doctor/availability" method="POST" class="flex gap-sm" style="margin-bottom:20px; flex-wrap:wrap;">
+            <select name="availabilityStatus" aria-label="Set availability">
+              <option value="Available" {{#if isAvailable}}selected{{/if}}>Available</option>
+              <option value="Not Available" {{#unless isAvailable}}selected{{/unless}}>Not Available</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" type="submit">Update status</button>
+          </form>
+
+          <form action="/doctor/queue" method="POST" class="flex gap-sm" style="margin-bottom:20px; flex-wrap:wrap; align-items:flex-end;">
+            <div class="field mb-0">
+              <label for="currentNumber">Now serving token #</label>
+              <input type="number" id="currentNumber" name="currentNumber" min="0" value="{{currentNumber}}" style="width:120px;" />
+            </div>
+            <button class="btn btn-secondary btn-sm" type="submit">Update</button>
+          </form>
+
+          {{#if todaysAppointments.length}}
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Token</th><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th></th></tr>
+                </thead>
+                <tbody>
+                  {{#each todaysAppointments}}
+                    <tr>
+                      <td>#{{this.tokenNumber}}</td>
+                      <td>{{this.time}}</td>
+                      <td>{{this.patientName}} <span class="text-muted text-sm">({{this.age}}{{#if this.gender}}, {{this.gender}}{{/if}})</span></td>
+                      <td>{{#if this.reason}}{{this.reason}}{{else}}—{{/if}}</td>
+                      <td><span class="badge {{badgeClass this.status}}">{{this.status}}</span></td>
+                      <td class="flex gap-sm">
+                        <form action="/doctor/appointments/{{this._id}}/complete" method="POST">
+                          <button class="btn btn-secondary btn-sm" type="submit">Complete</button>
+                        </form>
+                        <form action="/doctor/appointments/{{this._id}}/cancel" method="POST" data-confirm="Cancel this patient's appointment?">
+                          <button class="btn btn-danger btn-sm" type="submit">Cancel</button>
+                        </form>
+                      </td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
+          {{else}}
+            <div class="state-block state-block--inline">
+              <h3>No appointments today</h3>
+              <p class="mb-0">New bookings for today will appear here.</p>
+            </div>
+          {{/if}}
+        </section>
+
+        <section id="profile" class="card">
+          <h2 style="font-size:1.1rem;">Profile & availability settings</h2>
+          <form action="/doctor/profile" method="POST" enctype="multipart/form-data">
+            <div class="field-grid">
+              <div class="field">
+                <label for="specialization">Specialization</label>
+                <input type="text" id="specialization" name="specialization" value="{{doctor.specialization}}" required />
+              </div>
+              <div class="field">
+                <label for="education">Education</label>
+                <input type="text" id="education" name="education" value="{{doctor.education}}" />
+              </div>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="fee">Consultation fee (₹)</label>
+                <input type="number" id="fee" name="fee" min="0" value="{{doctor.fee}}" />
+              </div>
+              <div class="field">
+                <label for="maxPatientsPerDay">Max patients per day</label>
+                <input type="number" id="maxPatientsPerDay" name="maxPatientsPerDay" min="1" value="{{doctor.maxPatientsPerDay}}" />
+              </div>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="workingHoursStart">Working hours start</label>
+                <input type="time" id="workingHoursStart" name="workingHoursStart" value="{{doctor.workingHoursStart}}" />
+              </div>
+              <div class="field">
+                <label for="workingHoursEnd">Working hours end</label>
+                <input type="time" id="workingHoursEnd" name="workingHoursEnd" value="{{doctor.workingHoursEnd}}" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="number">Phone number</label>
+              <input type="tel" id="number" name="number" value="{{doctor.number}}" />
+            </div>
+            <div class="field">
+              <label for="profileImage">Update profile photo</label>
+              <input type="file" id="profileImage" name="profileImage" accept="image/jpeg,image/png,image/webp" />
+            </div>
+            <button class="btn btn-primary" type="submit">Save changes</button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+{{> footer}}
+<script src="/js/app.js"></script>
+</body>
+</html>

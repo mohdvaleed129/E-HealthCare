@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head title="All appointments"}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{{> navbar}}
+<main id="main">
+  <div class="container section">
+    {{> alert}}
+    <h1>All appointments</h1>
+
+    <div class="dashboard">
+      <aside class="dashboard__sidebar">
+        <nav aria-label="Admin sections">
+          <a href="/admin">Overview</a>
+          <a href="/admin/doctors">Doctors</a>
+          <a href="/admin/patients">Patients</a>
+          <a href="/admin/appointments" class="is-active">Appointments</a>
+        </nav>
+      </aside>
+
+      <div class="dashboard__main">
+        <form action="/admin/appointments" method="GET" class="search-bar" style="margin-bottom:20px; flex-wrap:wrap;">
+          <input type="search" name="q" placeholder="Patient name…" value="{{filters.q}}" />
+          <select name="doctorId">
+            <option value="">All doctors</option>
+            {{#each doctors}}
+              <option value="{{this._id}}" {{#if (eq this._id ../filters.doctorId)}}selected{{/if}}>Dr. {{this.name}}</option>
+            {{/each}}
+          </select>
+          <select name="status">
+            <option value="">All statuses</option>
+            <option value="pending" {{#if (eq filters.status "pending")}}selected{{/if}}>Pending</option>
+            <option value="confirmed" {{#if (eq filters.status "confirmed")}}selected{{/if}}>Confirmed</option>
+            <option value="completed" {{#if (eq filters.status "completed")}}selected{{/if}}>Completed</option>
+            <option value="cancelled" {{#if (eq filters.status "cancelled")}}selected{{/if}}>Cancelled</option>
+          </select>
+          <input type="date" name="date" value="{{filters.date}}" />
+          <button class="btn btn-primary" type="submit">Filter</button>
+        </form>
+
+        {{#if appointments.length}}
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Token</th><th>Status</th></tr></thead>
+              <tbody>
+                {{#each appointments}}
+                  <tr>
+                    <td>{{this.patientName}}</td>
+                    <td>Dr. {{this.doctorId.name}}</td>
+                    <td>{{this.date}}</td>
+                    <td>{{this.time}}</td>
+                    <td>#{{this.tokenNumber}}</td>
+                    <td><span class="badge {{badgeClass this.status}}">{{this.status}}</span></td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        {{else}}
+          <div class="state-block"><h3>No appointments match</h3><p class="mb-0">Try clearing the filters.</p></div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</main>
+{{> footer}}
+<script src="/js/app.js"></script>
+</body>
+</html>

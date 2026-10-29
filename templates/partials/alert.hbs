@@ -1,0 +1,8 @@
+{{#if message}}
+<div class="alert alert-{{message.type}}" role="alert">
+  <div>
+    {{#if message.intro}}<strong>{{message.intro}}</strong> {{/if}}{{message.message}}
+  </div>
+  <button type="button" class="alert-dismiss" data-alert-dismiss aria-label="Dismiss">&times;</button>
+</div>
+{{/if}}

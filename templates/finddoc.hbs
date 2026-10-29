@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head title="Find a doctor"}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{{> navbar}}
+<main id="main">
+  <div class="container section">
+    <h1>Find a doctor</h1>
+    <form action="/doctors" method="GET" class="search-bar" style="margin-bottom:28px;" role="search">
+      <label for="q" class="visually-hidden">Search by doctor name</label>
+      <input type="search" id="q" name="q" placeholder="Search by name…" value="{{query}}" data-live-search />
+      <label for="specialization" class="visually-hidden">Filter by specialization</label>
+      <select id="specialization" name="specialization">
+        <option value="">All specializations</option>
+        {{#each specializations}}
+          <option value="{{this}}" {{#if (eq this ../selectedSpecialization)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+      </select>
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+
+    {{#if doctors.length}}
+      <div class="grid grid-2" id="doctor-results">
+        {{#each doctors}}
+          <div class="doctor-card" data-doctor-card data-name="{{this.name}}" data-spec="{{this.specialization}}">
+            {{#if this.profileImage}}
+              <img class="doctor-card__avatar" src="/pictures/{{this.profileImage}}" alt="Photo of Dr. {{this.name}}" />
+            {{else}}
+              <div class="doctor-card__avatar" aria-hidden="true"></div>
+            {{/if}}
+            <div class="doctor-card__body">
+              <h3 class="doctor-card__name">Dr. {{this.name}}</h3>
+              <p class="doctor-card__spec">{{this.specialization}}</p>
+              <div class="doctor-card__meta">
+                {{#if this.fee}}<span>₹{{this.fee}} consultation</span>{{/if}}
+                <span>{{this.workingHoursStart}}–{{this.workingHoursEnd}}</span>
+                <span class="badge {{badgeClass this.availabilityStatus}}">{{this.availabilityStatus}}</span>
+              </div>
+              <div class="doctor-card__actions">
+                <a class="btn btn-primary btn-sm" href="/doctors/{{this._id}}">View & book</a>
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+      <div class="state-block" data-search-empty style="display:none;">
+        <h3>No matches</h3>
+        <p>Try a different name or clear the search box.</p>
+      </div>
+    {{else}}
+      <div class="state-block">
+        <h3>No doctors found</h3>
+        <p>Try a different search term or check back soon — new doctors are added after admin review.</p>
+      </div>
+    {{/if}}
+  </div>
+</main>
+{{> footer}}
+<script src="/js/app.js"></script>
+</body>
+</html>

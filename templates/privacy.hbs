@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head title="Privacy policy"}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{{> navbar}}
+<main id="main">
+  <div class="container section" style="max-width:760px;">
+    <h1>Privacy policy</h1>
+    <p class="text-muted">Last updated {{currentYear}}</p>
+    <p>CareStem collects only the information needed to book and manage appointments: your name, contact details, and the appointment details you enter (reason for visit, age, gender). We do not sell personal data.</p>
+    <h2 style="font-size:1.15rem;">What we store</h2>
+    <p>Account details (name, email, phone) and appointment records (doctor, date, time, reason). Passwords are stored using one-way hashing and are never visible to staff.</p>
+    <h2 style="font-size:1.15rem;">Sensitive identifiers</h2>
+    <p>We do not require or display government ID numbers (such as Aadhaar) in any dashboard, URL, or log. If a future feature needs this information, it will be encrypted at rest and access-restricted.</p>
+    <h2 style="font-size:1.15rem;">SMS notifications</h2>
+    <p>If you provide a phone number, we use it only to send appointment confirmations via our SMS provider. You can leave this field blank.</p>
+    <h2 style="font-size:1.15rem;">Your choices</h2>
+    <p>You can update or remove your profile details at any time from your account, or contact an administrator to request account deletion.</p>
+  </div>
+</main>
+{{> footer}}
+<script src="/js/app.js"></script>
+</body>
+</html>

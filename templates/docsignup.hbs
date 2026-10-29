@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head title="Apply as a doctor"}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{{> navbar}}
+<main id="main">
+  <div class="container section">
+    {{> alert}}
+    <div class="form-card form-card--wide">
+      <h1 style="font-size:1.5rem;">Apply as a doctor</h1>
+      <p class="text-sm text-muted">Applications are reviewed by an admin before you can log in. You'll be notified once approved.</p>
+      <form action="/doctor/signup" method="POST" enctype="multipart/form-data" novalidate>
+        <div class="field-grid">
+          <div class="field">
+            <label for="name">Full name</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div class="field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" minlength="8" required />
+          </div>
+          <div class="field">
+            <label for="number">Phone number</label>
+            <input type="tel" id="number" name="number" />
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="specialization">Specialization</label>
+            <input type="text" id="specialization" name="specialization" placeholder="e.g. Cardiology" required />
+          </div>
+          <div class="field">
+            <label for="education">Education</label>
+            <input type="text" id="education" name="education" placeholder="e.g. MBBS, MD" />
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="fee">Consultation fee (₹)</label>
+            <input type="number" id="fee" name="fee" min="0" />
+          </div>
+          <div class="field">
+            <label for="maxPatientsPerDay">Max patients per day</label>
+            <input type="number" id="maxPatientsPerDay" name="maxPatientsPerDay" min="1" value="20" />
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="workingHoursStart">Working hours start</label>
+            <input type="time" id="workingHoursStart" name="workingHoursStart" value="09:00" />
+          </div>
+          <div class="field">
+            <label for="workingHoursEnd">Working hours end</label>
+            <input type="time" id="workingHoursEnd" name="workingHoursEnd" value="17:00" />
+          </div>
+        </div>
+        <fieldset class="field" style="border:none; padding:0;">
+          <legend style="font-weight:600; font-size:0.9rem; margin-bottom:6px;">Working days</legend>
+          <div class="flex gap-sm" style="flex-wrap:wrap;">
+            <label class="checkbox-row"><input type="checkbox" name="workingDays" value="Mon" checked /> Mon</label>
+            <label class="checkbox-row"><input type="checkbox" name="workingDays" value="Tue" checked /> Tue</label>
+            <label class="checkbox-row"><input type="checkbox" name="workingDays" value="Wed" checked /> Wed</label>
+            <label class="checkbox-row"><input type="checkbox" name="workingDays" value="Thu" checked /> Thu</label>
+            <label class="checkbox-row"><input type="checkbox" name="workingDays" value="Fri" checked /> Fri</label>
+            <label class="checkbox-row"><input type="checkbox" name="workingDays" value="Sat" /> Sat</label>
+            <label class="checkbox-row"><input type="checkbox" name="workingDays" value="Sun" /> Sun</label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="profileImage">Profile photo (optional)</label>
+          <input type="file" id="profileImage" name="profileImage" accept="image/jpeg,image/png,image/webp" />
+          <p class="hint">JPEG, PNG, or WEBP — up to 3MB.</p>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Submit application</button>
+      </form>
+      <p class="text-sm mt-lg mb-0">Already approved? <a href="/login">Log in</a></p>
+    </div>
+  </div>
+</main>
+{{> footer}}
+<script src="/js/app.js"></script>
+</body>
+</html>

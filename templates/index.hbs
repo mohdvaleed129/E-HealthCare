@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head title="Home" metaDescription="Find verified doctors and book appointments online in minutes."}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{{> navbar}}
+<main id="main">
+  {{> alert}}
+
+  <section class="hero container">
+    <div>
+      <p class="hero__eyebrow">Appointment booking, without the phone tag</p>
+      <h1>Book a doctor's appointment in the time it takes to make tea</h1>
+      <p class="lede">Search verified doctors by specialization, check real availability and fees, and get a confirmed token number — no calls, no waiting rooms full of guesswork.</p>
+      <div class="flex gap-md" style="margin-top:24px;">
+        <a class="btn btn-primary" href="/doctors">Find a doctor</a>
+        {{#unless isAuthenticated}}
+          <a class="btn btn-secondary" href="/doctor/signup">Apply as a doctor</a>
+        {{/unless}}
+      </div>
+    </div>
+    <div class="hero__art">
+      <h3 style="margin-bottom:16px;">Today at a glance</h3>
+      <div class="stack">
+        <div class="flex-between">
+          <span class="text-muted text-sm">Average booking time</span>
+          <strong>90 sec</strong>
+        </div>
+        <div class="flex-between">
+          <span class="text-muted text-sm">Specializations listed</span>
+          <strong>{{featuredDoctors.length}}+ doctors onboarded</strong>
+        </div>
+        <div class="flex-between">
+          <span class="text-muted text-sm">Doctor approval</span>
+          <strong>Admin-reviewed</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section--tight">
+    <div class="flex-between" style="margin-bottom:20px;">
+      <h2 class="mb-0">Recently joined doctors</h2>
+      <a href="/doctors">View all</a>
+    </div>
+
+    {{#if featuredDoctors.length}}
+      <div class="grid grid-3">
+        {{#each featuredDoctors}}
+          <div class="doctor-card" style="flex-direction:column;">
+            {{#if this.profileImage}}
+              <img class="doctor-card__avatar" src="/pictures/{{this.profileImage}}" alt="Photo of Dr. {{this.name}}" />
+            {{else}}
+              <div class="doctor-card__avatar" aria-hidden="true"></div>
+            {{/if}}
+            <div class="doctor-card__body">
+              <h3 class="doctor-card__name">Dr. {{this.name}}</h3>
+              <p class="doctor-card__spec">{{this.specialization}}</p>
+              <div class="doctor-card__actions">
+                <a class="btn btn-primary btn-sm" href="/doctors/{{this._id}}">View & book</a>
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="state-block">
+        <h3>No doctors listed yet</h3>
+        <p>Once doctors apply and are approved by an admin, they'll appear here.</p>
+      </div>
+    {{/if}}
+  </section>
+
+  <section class="container section--tight">
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>1. Search</h3>
+        <p class="text-sm mb-0">Filter by specialization or search by name to find the right doctor.</p>
+      </div>
+      <div class="card">
+        <h3>2. Book</h3>
+        <p class="text-sm mb-0">Pick a date and time inside the doctor's working hours. Get an instant token number.</p>
+      </div>
+      <div class="card">
+        <h3>3. Show up</h3>
+        <p class="text-sm mb-0">Track your appointment status and cancel or view details from your dashboard.</p>
+      </div>
+    </div>
+  </section>
+</main>
+{{> footer}}
+<script src="/js/app.js"></script>
+</body>
+</html>

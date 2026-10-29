@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head title=(concat "Dr. " doctor.name)}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{{> navbar}}
+<main id="main">
+  <div class="container section">
+    {{> alert}}
+    <div class="grid" style="grid-template-columns: 1fr 1.2fr; gap:32px; align-items:start;">
+      <div class="card">
+        {{#if doctor.profileImage}}
+          <img class="doctor-card__avatar" style="width:96px;height:96px;margin-bottom:16px;" src="/pictures/{{doctor.profileImage}}" alt="Photo of Dr. {{doctor.name}}" />
+        {{/if}}
+        <h1 style="font-size:1.5rem;">Dr. {{doctor.name}}</h1>
+        <p class="doctor-card__spec">{{doctor.specialization}}</p>
+        {{#if doctor.education}}<p class="text-sm text-muted">{{doctor.education}}</p>{{/if}}
+        <div class="stack" style="margin-top:16px;">
+          <div class="flex-between"><span class="text-sm text-muted">Consultation fee</span><strong>{{#if doctor.fee}}₹{{doctor.fee}}{{else}}Not listed{{/if}}</strong></div>
+          <div class="flex-between"><span class="text-sm text-muted">Working hours</span><strong>{{doctor.workingHoursStart}}–{{doctor.workingHoursEnd}}</strong></div>
+          <div class="flex-between"><span class="text-sm text-muted">Working days</span><strong>{{#each doctor.workingDays}}{{this}} {{/each}}</strong></div>
+          <div class="flex-between"><span class="text-sm text-muted">Today's bookings</span><strong>{{todaysCount}} / {{doctor.maxPatientsPerDay}}</strong></div>
+          <div class="flex-between"><span class="text-sm text-muted">Status</span><span class="badge {{badgeClass doctor.availabilityStatus}}">{{doctor.availabilityStatus}}</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 style="font-size:1.2rem;">Book an appointment</h2>
+        {{#if isAuthenticated}}
+          {{#if (eq currentUser.role "patient")}}
+            {{#if isFull}}
+              <div class="state-block state-block--inline">
+                <h3>Fully booked for today</h3>
+                <p class="mb-0">Try a different date, or check back tomorrow.</p>
+              </div>
+            {{/if}}
+            <form action="/appointments" method="POST" novalidate>
+              <input type="hidden" name="doctorId" value="{{doctor._id}}" />
+              <div class="field-grid">
+                <div class="field">
+                  <label for="date">Date</label>
+                  <input type="date" id="date" name="date" value="{{minDate}}" data-min-today required />
+                </div>
+                <div class="field">
+                  <label for="time">Time</label>
+                  <input type="time" id="time" name="time" min="{{doctor.workingHoursStart}}" max="{{doctor.workingHoursEnd}}" required />
+                </div>
+              </div>
+              <div class="field-grid">
+                <div class="field">
+                  <label for="patientName">Patient name</label>
+                  <input type="text" id="patientName" name="patientName" required />
+                </div>
+                <div class="field">
+                  <label for="age">Age</label>
+                  <input type="number" id="age" name="age" min="0" max="120" />
+                </div>
+              </div>
+              <div class="field-grid">
+                <div class="field">
+                  <label for="gender">Gender</label>
+                  <select id="gender" name="gender">
+                    <option value="">Prefer not to say</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="phone">Phone number</label>
+                  <input type="tel" id="phone" name="phone" placeholder="For SMS confirmation" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="reason">Reason for visit (optional)</label>
+                <textarea id="reason" name="reason" maxlength="1000"></textarea>
+              </div>
+              <button class="btn btn-primary btn-block" type="submit">Confirm appointment</button>
+            </form>
+          {{else}}
+            <div class="state-block state-block--inline">
+              <h3>Booking is for patients</h3>
+              <p class="mb-0">Log in with a patient account to book this doctor.</p>
+            </div>
+          {{/if}}
+        {{else}}
+          <div class="state-block state-block--inline">
+            <h3>Log in to book</h3>
+            <p>Create a free patient account or log in to book this appointment.</p>
+            <div class="flex gap-md">
+              <a class="btn btn-primary" href="/login">Log in</a>
+              <a class="btn btn-secondary" href="/signup">Sign up</a>
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</main>
+{{> footer}}
+<script src="/js/app.js"></script>
+</body>
+</html>

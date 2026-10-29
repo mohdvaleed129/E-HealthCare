@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> head title="Admin dashboard"}}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+{{> navbar}}
+<main id="main">
+  <div class="container section">
+    {{> alert}}
+    <h1>Admin overview</h1>
+
+    <div class="dashboard">
+      <aside class="dashboard__sidebar">
+        <nav aria-label="Admin sections">
+          <a href="/admin" class="is-active">Overview</a>
+          <a href="/admin/doctors">Doctors</a>
+          <a href="/admin/patients">Patients</a>
+          <a href="/admin/appointments">Appointments</a>
+        </nav>
+      </aside>
+
+      <div class="dashboard__main">
+        <div class="grid grid-4">
+          <div class="stat-card stat-card--accent"><div class="stat-card__label">Total patients</div><div class="stat-card__value">{{stats.totalPatients}}</div></div>
+          <div class="stat-card"><div class="stat-card__label">Approved doctors</div><div class="stat-card__value">{{stats.totalDoctors}}</div></div>
+          <div class="stat-card"><div class="stat-card__label">Pending doctors</div><div class="stat-card__value">{{stats.pendingDoctors}}</div></div>
+          <div class="stat-card"><div class="stat-card__label">Total appointments</div><div class="stat-card__value">{{stats.totalAppointments}}</div></div>
+          <div class="stat-card"><div class="stat-card__label">Today's appointments</div><div class="stat-card__value">{{stats.todaysAppointments}}</div></div>
+          <div class="stat-card"><div class="stat-card__label">Completed</div><div class="stat-card__value">{{stats.completedAppointments}}</div></div>
+          <div class="stat-card"><div class="stat-card__label">Cancelled</div><div class="stat-card__value">{{stats.cancelledAppointments}}</div></div>
+        </div>
+
+        {{#if (gt stats.pendingDoctors 0)}}
+          <div class="alert alert-warning mt-lg" role="status">
+            <div>{{stats.pendingDoctors}} doctor application(s) are waiting for review. <a href="/admin/doctors?status=pending">Review now</a></div>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</main>
+{{> footer}}
+<script src="/js/app.js"></script>
+</body>
+</html>
